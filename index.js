@@ -3,7 +3,7 @@ const express =require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const { listarAtivos, listarProventos } = require('./controllers/carteira.js');
+const { listarAtivos, listarProventos, listarProventosFiltros } = require('./controllers/carteira.js');
 
 //criar servidor
 
@@ -18,6 +18,8 @@ app.use(bodyParser.json()); //envia e recebe formado json
 
 app.get('/ativos', listarAtivos);
 app.get('/proventos', listarProventos);
+app.get('/proventos/:filtro', listarProventosFiltros);
 
 app.listen(port, () => 
     console.log(`Servidor inicializado na porta ${port}` ));
+

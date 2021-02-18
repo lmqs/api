@@ -21,8 +21,17 @@ async function selectAtivo(){
 async function selectProventos(){
     const conn = await connect();
     //const [rows] = await conn.query('SELECT * FROM provento;');
-    const [rows] = await conn.query("select p.id_provento, a.ds_ativo, case when in_tipo_provento ='D' then 'Dividendo' when in_tipo_provento ='J' then 'JCP'when in_tipo_provento ='A' then 'Amortização' when in_tipo_provento ='R' then 'Rendimento Tributado' end as in_tipo_provento, dt_com, dt_pagamento, nr_valor from provento p inner join ativo a on a.id_ativo = p.cd_ativo order by dt_com desc;");
+    const [rows] = await conn.query("select p.id_provento, a.ds_ativo, case when in_tipo_provento ='D' then 'Dividendo' when in_tipo_provento ='J' then 'JCP'when in_tipo_provento ='A' then 'Amortização' when in_tipo_provento ='R' then 'Rendimento Tributado' end as in_tipo_provento, dt_com, dt_pagamento, replace(nr_valor, '.',',') as nr_valor from provento p inner join ativo a on a.id_ativo = p.cd_ativo order by dt_com desc;");
     return rows;
 }
  
-module.exports = {selectAtivo, selectProventos}
+
+async function selectProventosFiltros(filtro){
+    console.log(filtro);
+    const conn = await connect();
+    const sql = `select p.id_provento, a.ds_ativo, case when in_tipo_provento ='D' then 'Dividendo' when in_tipo_provento ='J' then 'JCP'when in_tipo_provento ='A' then 'Amortização' when in_tipo_provento ='R' then 'Rendimento Tributado' end as in_tipo_provento, dt_com, dt_pagamento, replace(nr_valor, '.',',') as nr_valor from provento p inner join ativo a on a.id_ativo = p.cd_ativo where case when ? = 'T' then 1=1 else in_tipo_ativo = ? end  order by dt_com desc;`;
+    return await conn.query(sql, [filtro, filtro]);
+    //const [rows] = await conn.query(`);
+    //return rows;
+}
+module.exports = {selectAtivo, selectProventos, selectProventosFiltros}

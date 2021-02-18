@@ -22,10 +22,14 @@ async function listarProventos(req, res){
     res.status(200).json(provento)
 }
 
+async function listarProventosFiltros(req, res){
+    const provento = await db.selectProventosFiltros(res.params.filtro);
+    res.status(200).json(provento)
+}
 
 
 module.exports= {
-    listarAtivos, listarProventos
+    listarAtivos, listarProventos, listarProventosFiltros
 }
 
  
